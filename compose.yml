@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: containers/Containerfile
+    container_name: ${CONTAINER_APP_NAME}
+    env_file:
+      - .env
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    command: uvicorn main:app --host 0.0.0.0 --port ${APP_PORT}
