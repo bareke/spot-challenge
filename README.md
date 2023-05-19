@@ -59,7 +59,9 @@ $ source venv/bin/activate
 # 3. Install dependencies
 $ pip install -r requirements.txt
 
-# 4. Execute app
+# 4. Create file .env
+
+# 5. Execute app
 $ uvicorn main:app --reload
 ```
 
