@@ -42,3 +42,5 @@ docker-compose.yaml
 *.dev
 .env.qa
 *.qa
+env.example
+*.example

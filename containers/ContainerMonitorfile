@@ -1,0 +1,22 @@
+# Use the official Python base image
+FROM python:3.10.10-slim-buster
+
+# Set the author label for the image
+LABEL org.opencontainers.image.authors="Cristian Ordoñez"
+
+# Set environment variables to configure Python
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory inside the container
+WORKDIR /code
+
+# Copy the requirements.txt file to the container's working directory
+RUN pip install --upgrade pip
+
+# Install the Python dependencies
+RUN pip install --no-cache-dir "celery[redis]"
+RUN pip install --no-cache-dir flower
+
+# Copy the entire current directory to the container's working directory
+COPY . /code/

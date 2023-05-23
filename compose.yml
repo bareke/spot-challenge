@@ -5,10 +5,61 @@ services:
   app:
     build:
       context: .
-      dockerfile: containers/Containerfile
+      dockerfile: containers/ContainerBackendfile
     container_name: ${CONTAINER_APP_NAME}
     env_file:
       - .env
     ports:
       - ${APP_PORT}:${APP_PORT}
     command: uvicorn main:app --host 0.0.0.0 --port ${APP_PORT}
+    depends_on:
+      - db
+
+  db:
+    image: ${DATABASE_IMAGE}
+    container_name: ${CONTAINER_DATABASE_NAME}
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  queue:
+    build:
+      context: .
+      dockerfile: containers/ContainerQueuefile
+    env_file:
+      - .env
+    command: celery -A app.settings.worker worker --loglevel=info --logfile=celery.log
+    depends_on:
+      - app
+      - store
+
+  store:
+    image: ${STORE_IMAGE}
+    container_name: ${CONTAINER_STORE_NAME}
+    env_file:
+      - .env
+    ports:
+      - ${STORE_PORT}:${STORE_PORT}
+
+  monitor:
+    build:
+        context: .
+        dockerfile: containers/ContainerMonitorfile
+    container_name: ${CONTAINER_MONITOR_NAME}
+    env_file:
+      - .env
+    ports:
+      - ${MONITOR_PORT}:${MONITOR_PORT}
+    command: celery --broker=redis://${CONTAINER_STORE_NAME}:${STORE_PORT}/0 flower --port=${MONITOR_PORT}
+    depends_on:
+      - app
+      - store
+      - queue
+
+volumes:
+  db_data:
