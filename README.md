@@ -1,9 +1,9 @@
 <div align="center">
-  <a style="vertical-align: middle;" href="https://www.spotcloud.io/" target="blank">
+  <a style="vertical-align: middle;" class="logo" href="https://www.spotcloud.io/" target="_blank">
     <img src="https://www.spotcloud.io/Logo.png" width="300" alt="Inndico Logo" />
   </a>
-  <a style="vertical-align: middle;" href="https://fastapi.tiangolo.com/" target="blank">
-    <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" width="450" alt="FastAPI Logo">
+  <a style="vertical-align: middle;" class="logo" href="https://fastapi.tiangolo.com/" target="_blank">
+    <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" width="350" alt="FastAPI Logo">
   </a>
 </div>
 
