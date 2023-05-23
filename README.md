@@ -1,6 +1,6 @@
 <div align="center">
   <a style="vertical-align: middle;" href="https://www.spotcloud.io/" target="blank">
-    <img src="https://www.spotcloud.io/Logo.png" width="400" alt="Inndico Logo" />
+    <img src="https://www.spotcloud.io/Logo.png" width="300" alt="Inndico Logo" />
   </a>
   <a style="vertical-align: middle;" href="https://fastapi.tiangolo.com/" target="blank">
     <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" width="450" alt="FastAPI Logo">
@@ -34,13 +34,32 @@ Upload images with FastAPI and Azure
 
 ## Environment Variables
 
+*Please make sure you provide the correct credentials before running the project*
+
 ```python
-# APP
-CONTAINER_APP_NAME=fastapi-dev
+# FASTAPI
+CONTAINER_APP_NAME="fastapi-dev"
 APP_PORT=8000
+STORAGE_ACCOUNT="accountexample"
+STORAGE_CONTAINER_NAME="test-example"
+STORAGE_ACCESS_KEY="Id2qEHNgLKWC5c28=="
+
+# CELERY
+CONTAINER_WORKER_NAME="celery-dev"
+WORKER_BROKER_URL="redis://redis-dev:6379/0"
+WORKER_RESULT_BACKEND="redis://redis-dev:6379/0"
+
+# REDIS
+CONTAINER_STORE_NAME="redis-dev"
+STORE_IMAGE="redis:7.0-alpine"
+STORE_PORT=6379
+
+# FLOWER
+CONTAINER_MONITOR_NAME="flower-dev"
+MONITOR_PORT=5555
 ```
 
-## Development
+## Run project
 
 ### Local
 
@@ -61,25 +80,33 @@ $ pip install -r requirements.txt
 
 # 4. Create file .env
 
-# 5. Execute app
-$ uvicorn main:app --reload
+# 5. Install database postgresql
+
+# 6. Execute app
+$ uvicorn main:app
+
+# 7. Install database redis
+
+# 8. Execute queue
+$ celery -A app.settings.worker worker --loglevel=info --logfile=celery.log
+
+# 9. Execute monitor
+$ celery --broker=redis://localhost:6379/0 flower --port=5555
 ```
 
-### Container
+
+### Docker compose
 
 ```bash
 # 1. Create file .env
 
 # 2. Run containers
-$ docker compose --file compose.dev.yml up -d
+$ docker compose up -d --build --scale queue=5
 ```
 
-
-## Deploy
+## Upload images
 
 ```bash
-# 1. Create file .env
-
-# 2. Run containers
-$ docker compose up -d
+# Run the file to send the images
+$ python send_images_to_api.py
 ```
