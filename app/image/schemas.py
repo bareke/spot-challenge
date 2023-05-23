@@ -17,12 +17,24 @@ class StorageBase(BaseSchema):
 
 class StorageSchema(StorageBase):
     class Config:
-        # orm_mode = True
         alias_generator = to_camelcase
         allow_population_by_field_name = True
 
 
-class GetImageSchema(StorageSchema):
+class ImageBase(BaseSchema):
+    date: datetime
+    id_camera: int
+    url: str = None
+
+
+class ImageSchema(ImageBase):
+    class Config:
+        orm_mode = True
+        alias_generator = to_camelcase
+        allow_population_by_field_name = True
+
+
+class GetImageSchema(ImageSchema):
     pass
 
 
@@ -40,8 +52,12 @@ class ResponseSchema(BaseSchema):
         allow_population_by_field_name = True
 
 
-class ResponseGetImages(ResponseSchema):
+class ResponseGetBlobs(ResponseSchema):
     data: list[str] = None
+
+
+class ResponseGetImage(ResponseSchema):
+    data: GetImageSchema = None
 
 
 class ResponsePostImage(ResponseSchema):

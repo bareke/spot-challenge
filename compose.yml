@@ -18,14 +18,14 @@ services:
   db:
     image: ${DATABASE_IMAGE}
     container_name: ${CONTAINER_DATABASE_NAME}
+    env_file:
+      - .env
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
       POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - ${DATABASE_PORT}:${DATABASE_PORT}
-    volumes:
-      - db_data:/var/lib/postgresql/data/
 
   queue:
     build:
@@ -60,6 +60,3 @@ services:
       - app
       - store
       - queue
-
-volumes:
-  db_data:
